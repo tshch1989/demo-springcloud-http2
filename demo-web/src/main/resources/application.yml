@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+  http2:
+    enabled: true
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+    protocol: TLSv1.2
+    key-alias: tsc-http2
+spring:
+  application:
+    name: @name@
+eureka:
+  instance:
+    instance-id: ${eureka.instance.hostname}:${spring.application.name}:${server.port}
+    hostname: localhost-1
+    metadata-map:
+      profile: test
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    healthcheck:
+      enabled: true
+info:
+  app.name: @name@
+  jdk.version: @java.version@
+  build.artifactId: @project.artifactId@
+  build.version: @project.version@
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+    hystrix:
+      stream:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+feign:
+  hystrix:
+    enabled: false
