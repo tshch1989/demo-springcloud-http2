@@ -20,13 +20,15 @@ public class WebEchoController {
 
     @GetMapping("/echo.do")
     @ResponseBody
-    public Object echo(String msg){
+    public String echo(String msg){
         log.info("web 接收到 {}", msg);
         RequestEntity<?> entity = RequestEntity
                 .post(URI.create("https://demo-service/echo.do"))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body("msg="+msg);
-        return restTemplate.exchange(entity, Object.class);
+        return restTemplate
+                .exchange(entity, String.class)
+                .getBody();
     }
 
 }

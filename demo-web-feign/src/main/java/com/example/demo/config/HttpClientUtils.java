@@ -24,7 +24,7 @@ public class HttpClientUtils {
 
     public static CloseableHttpClient acceptsUntrustedCertsHttpClient()
             throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        HttpClientBuilder b = HttpClientBuilder.create();
 
         SSLContext sslContext = new SSLContextBuilder()
                 .loadTrustMaterial(null, new TrustStrategy() {
@@ -34,7 +34,7 @@ public class HttpClientUtils {
                 return true;
             }
         }).build();
-        httpClientBuilder.setSSLContext(sslContext);
+        b.setSSLContext(sslContext);
 
         HostnameVerifier hostnameVerifier = NoopHostnameVerifier.INSTANCE;
 
@@ -46,13 +46,13 @@ public class HttpClientUtils {
                 .register("https", sslSocketFactory)
                 .build();
 
-        PoolingHttpClientConnectionManager connectionManager =
-                new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-        connectionManager.setMaxTotal(50);
-        connectionManager.setDefaultMaxPerRoute(10);
-        httpClientBuilder.setConnectionManager(connectionManager);
+        PoolingHttpClientConnectionManager connMgr =
+                new PoolingHttpClientConnectionManager( socketFactoryRegistry);
+        connMgr.setMaxTotal(200);
+        connMgr.setDefaultMaxPerRoute(100);
+        b.setConnectionManager( connMgr);
 
-        CloseableHttpClient client = httpClientBuilder.build();
+        CloseableHttpClient client = b.build();
 
         return client;
     }

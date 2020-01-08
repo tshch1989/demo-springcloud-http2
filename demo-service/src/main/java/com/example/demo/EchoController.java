@@ -12,7 +12,7 @@ public class EchoController {
 
     @PostMapping("/echo.do")
     @ResponseBody
-    public Object echo(@RequestParam("msg") String msg){
+    public String echo(@RequestParam("msg") String msg){
         log.info("service 接收到 {}", msg);
         try {
             Thread.sleep(10);
